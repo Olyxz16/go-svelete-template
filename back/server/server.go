@@ -3,6 +3,7 @@ package server
 import (
 	"flag"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
 	"strconv"
@@ -46,16 +47,24 @@ func NewServer() *http.Server {
 
 func init() {
     var err error
+
     host = os.Getenv("HOST")
     port, err = strconv.Atoi(os.Getenv("PORT"))
     if err != nil {
         panic("Cannot parse port !")
     }
+
     staticFPFlag := flag.String("staticFilepath", "", "Static files path")
     flag.Parse()
     staticFilepath = *staticFPFlag
     if staticFilepath == "" {
-        panic("Missing static files path !") 
+        if os.Getenv("DEBUG") == "true" {
+            os.Setenv("API_MODE", "true")
+            slog.Warn("API MODE IS ACTIVE. Add --staticFilepath flag to serve static file")
+        } else {
+            panic("--staticFilepath <path> is not set.")
+        }
+    } else {
+        handlers.StaticFilepath = staticFilepath
     }
-    handlers.StaticFilepath = staticFilepath
 }

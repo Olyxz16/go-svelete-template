@@ -15,11 +15,12 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.Static("/", staticFilepath)
     
     /* Static pages */
-    e.GET("/", handlers.Index)
-    e.GET("*", handlers.Index)
+    e.GET("/*", handlers.Index)
+    
+    /* Api endpoints */
 
-    /* Api Endpoints */
-    e.GET("/ping", handlers.Ping)
+    /* Health checks */
+    e.GET("/health", handlers.Health)
 
 	return e
 }
