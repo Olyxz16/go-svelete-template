@@ -19,28 +19,22 @@ var (
     host string
     port int
     staticFilepath string
+    db database.Service
 )
 
-type Server struct {
-	port int 
-	db database.Service
-}
 
 func NewServer() *http.Server {
-	NewServer := &Server{
-		port: port,
-
-		db: database.New(),
-	}
-
 	// Declare Server config
 	server := &http.Server{
-		Addr:         fmt.Sprintf("%s:%d", host, NewServer.port),
-		Handler:      NewServer.RegisterRoutes(),
+		Addr:         fmt.Sprintf("%s:%d", host, port),
+		Handler:      RegisterRoutes(),
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 30 * time.Second,
 	}
+    slog.Info(fmt.Sprintf("Starting server at %s:%d ...", host, port))
+
+    db = database.New()
 
 	return server
 }

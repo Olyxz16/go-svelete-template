@@ -9,7 +9,7 @@ import (
 	"github.com/Olyxz16/go-svelte-template/handlers"
 )
 
-func (s *Server) RegisterRoutes() http.Handler {
+func RegisterRoutes() http.Handler {
 	e := echo.New()
 	e.Use(middleware.Recover())
 	e.Static("/", staticFilepath)
