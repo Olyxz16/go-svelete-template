@@ -19,7 +19,9 @@ WORKDIR /go/bin/
 COPY --from=build-front /build/ ./static/
 COPY --from=build-back  /build/main ./main
 
-ENV PORT=8000
-EXPOSE 8000
+ENV PORT=8080
+EXPOSE 8080
+
+HEALTHCHECK CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT}/health || exit 1
 
 ENTRYPOINT ["/go/bin/main", "--staticFilepath", "./static"]
